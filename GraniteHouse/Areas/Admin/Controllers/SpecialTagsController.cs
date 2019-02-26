@@ -7,40 +7,37 @@ using System.Threading.Tasks;
 namespace GraniteHouse.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductTypesController : Controller
+    public class SpecialTagsController : Controller
     {
-
-        private readonly ApplicationDbContext _db;
-
-        public ProductTypesController(ApplicationDbContext db)
+        ApplicationDbContext _db;
+        public SpecialTagsController(ApplicationDbContext db)
         {
             _db = db;
         }
 
         public IActionResult Index()
         {
-
-            return View(_db.ProductTypes.ToList());
+            return View(_db.SpecialTags.ToList());
         }
 
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductTypes product)
+        public async Task<IActionResult> Create(SpecialTags specialTags)
         {
             if (ModelState.IsValid)
             {
-                _db.Add(product);
+                _db.SpecialTags.Add(specialTags);
                 await _db.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(product);
+            return View(specialTags);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -49,32 +46,31 @@ namespace GraniteHouse.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = await _db.ProductTypes.FindAsync(id);
-            if (productType == null)
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
-
-            return View(productType);
+            return View(specialTag);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductTypes productType)
+        public async Task<IActionResult> Edit(int id, SpecialTags specialTags)
         {
-            if (id != productType.Id)
+            if (id != specialTags.Id)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                _db.Update(productType);
+                _db.Update(specialTags);
                 await _db.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(productType);
+            return View(specialTags);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -83,13 +79,13 @@ namespace GraniteHouse.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = await _db.ProductTypes.FindAsync(id);
-            if (productType == null)
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
 
-            return View(productType);
+            return View(specialTag);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -98,22 +94,21 @@ namespace GraniteHouse.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = await _db.ProductTypes.FindAsync(id);
-            if (productType == null)
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
 
-            return View(productType);
+            return View(specialTag);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var productType = await _db.ProductTypes.FindAsync(id);
-            _db.ProductTypes.Remove(productType);
-
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            _db.SpecialTags.Remove(specialTag);
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
