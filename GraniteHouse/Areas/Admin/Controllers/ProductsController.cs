@@ -57,14 +57,29 @@ namespace GraniteHouse.Areas.Admin.Controllers
             string webRootPath = _hostingEnvironment.WebRootPath;
             var files = HttpContext.Request.Form.Files;
 
+            var productsFromDb = _db.Products.Find(ProductsVM.Products.Id);
+
             if(files.Count!=0)
             {
                 var uploads = Path.Combine(webRootPath, StaticDetails.ImageFolder);
                 var extension = Path.GetExtension(files[0].FileName);
 
                 using(var filestream = new FileStream(Path.Combine(uploads,ProductsVM.Products.Id+extension),FileMode.Create))
-                {}
+                {
+                    files[0].CopyTo(filestream);
+                }
+
+                productsFromDb.Image = @"\" + StaticDetails.ImageFolder + @"\" + ProductsVM.Products.Id + extension;
             }
+            else
+            {
+                var uploads = Path.Combine(webRootPath, StaticDetails.ImageFolder + @"\" + StaticDetails.DefaultProductImage);
+                System.IO.File.Copy(uploads, webRootPath + @"\" + StaticDetails.ImageFolder + @"\" + ProductsVM.Products.Id + ".png");
+                productsFromDb.Image = @"\" + StaticDetails.ImageFolder + @"\" + ProductsVM.Products.Id + ".png";
+            }
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
