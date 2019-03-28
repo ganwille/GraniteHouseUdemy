@@ -33,31 +33,33 @@
 				@Html.DisplayNameFor(m => m.SpecialTags)
 			</th>
 			<th></th>
-			<th></th>
 		</tr>
 
 		@foreach (var item in Model)
 		{
-		<tr>
-			<td>
-				@Html.DisplayFor(m => item.Name)
-			</td>
-			<td>
-				@Html.DisplayFor(m => item.Price)
-			</td>
-			<td>
-				@Html.DisplayFor(m => item.Available)
-			</td>
-			<td>
-				@Html.DisplayFor(m => item.ProductTypes.Name)
-			</td>
-			<td>
-				@Html.DisplayFor(m => item.SpecialTags.Name)
-			</td>
-			<td>
-				<partial name="_TableButtonPartial" model="item.Id" />
-			</td>
-		</tr>
+			<tr>
+				<td>
+					@Html.DisplayFor(m => item.Name)
+				</td>
+				<td>
+					@String.Format("{0:c}", item.Price)
+				</td>
+				<td>
+					@Html.DisplayFor(m => item.Available)
+				</td>
+				<td>
+					@Html.DisplayFor(m => item.ProductTypes.Name)
+				</td>
+				<td>
+					@if (!item.SpecialTags.Name.Equals("--None--"))
+					{
+						@Html.DisplayFor(m => item.SpecialTags.Name)
+					}
+				</td>
+				<td>
+					<partial name="_TableButtonPartial" model="item.Id" />
+				</td>
+			</tr>
 		}
 	</table>
 </div>
